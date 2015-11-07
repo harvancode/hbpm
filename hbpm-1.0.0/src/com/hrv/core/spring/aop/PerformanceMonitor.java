@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 public class PerformanceMonitor implements MethodInterceptor {
 	Logger logger = LogManager.getLogger(PerformanceMonitor.class);
 	private static final double MICRO = 1000;
-	private static final double MILI = 1000000;
-	private static final double SECOND = 1000000000;
+	private static final double MILI = 1000 * 1000;
+	private static final double SECOND = 1000 * 1000 * 1000;
 	private static final String NANO_S = "nano";
 	private static final String MICRO_S = "micro";
 	private static final String MILI_S = "mili";
