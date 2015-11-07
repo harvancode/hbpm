@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-schema="HBPM" match-name=".*"></table-filter>
+	<table schema="HBPM" name="SEQUENCE_FLOW">
+		<column name="ID"></column>
+		<column name="ON_ENTER_SCRIPT"></column>
+		<column name="ON_LEAVE_SCRIPT"></column>
+		<column name="SCRIPT"></column>
+		<column name="SEQ_NUMBER"></column>
+		<column name="TASK_ID"></column>
+	</table>
+	<table schema="HBPM" name="TASK">
+		<column name="ID"></column>
+		<column name="CLASS"></column>
+		<column name="ON_ENTER_SCRIPT"></column>
+		<column name="ON_LEAVE_SCRIPT"></column>
+		<column name="SCRIPT"></column>
+		<column name="SVC_ID"></column>
+	</table>
+	<table schema="HBPM" name="SERVICE">
+		<column name="ID"></column>
+		<column name="DESC"></column>
+		<column name="EFF_DATE"></column>
+		<column name="VERSION"></column>
+	</table>
+</hibernate-reverse-engineering>
