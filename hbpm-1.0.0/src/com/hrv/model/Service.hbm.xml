@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 7, 2015 1:40:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.hrv.hbpm.core.Service" table="SERVICE">
+		<id name="id" type="java.lang.String">
+			<column name="ID" sql-type="NVARCHAR2(40)" />
+			<generator class="assigned" />
+		</id>
+		<version name="version" type="int">
+			<column name="version" sql-type="NUMBER(5,0)" />
+		</version>
+		<property name="code" type="string">
+			<column name="CD" not-null="false" unique="false" sql-type="NVARCHAR2(255 CHAR)" />
+		</property>
+		<property name="description" type="java.lang.String">
+			<column name="DESCRIPTION" not-null="false" unique="false" sql-type="NVARCHAR2(255 CHAR)" />
+		</property>
+		<property name="effectiveDate" type="java.sql.Timestamp">
+			<column name="EFF_DATE" not-null="false" unique="false" sql-type="DATE" />
+		</property>
+		<property name="serviceVersion" type="int">
+			<column name="SVC_VERSION" sql-type="NUMBER(5,0)" />
+		</property>
+	</class>
+</hibernate-mapping>

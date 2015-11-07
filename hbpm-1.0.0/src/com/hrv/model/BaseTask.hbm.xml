@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 7, 2015 1:40:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.hrv.hbpm.core.BaseTask" table="BASE_TASK">
+		<id name="id" type="java.lang.String">
+			<column name="ID" sql-type="NVARCHAR2(40)" />
+			<generator class="assigned" />
+		</id>
+		<discriminator type="java.lang.String">
+			<column name="CLASS" sql-type="NVARCHAR2(255)" />
+		</discriminator>
+		<version name="version" type="int">
+			<column name="version" sql-type="NUMBER(5,0)" />
+		</version>
+		<property name="description" type="string">
+			<column name="DESCRIPTION" not-null="false" unique="false" sql-type="NVARCHAR2(255 CHAR)" />
+		</property>
+		<property name="onEnterScript" type="java.sql.Clob" lazy="true">
+			<column name="ON_ENTER_SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+		</property>
+		<property name="onLeaveScript" type="java.sql.Clob" lazy="true">
+			<column name="ON_LEAVE_SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+		</property>
+		<many-to-one name="service" class="com.hrv.hbpm.core.Service" fetch="select">
+			<column name="SVC_ID" not-null="false" unique="false" sql-type="NVARCHAR2(40 CHAR)" />
+		</many-to-one>
+		<subclass name="com.hrv.hbpm.core.StartTask" discriminator-value="com.hrv.hbpm.core.StartTask" dynamic-insert="false" dynamic-update="false" abstract="false">
+		</subclass>
+		<subclass name="com.hrv.hbpm.core.EndTask" discriminator-value="com.hrv.hbpm.core.EndTask" dynamic-insert="false" dynamic-update="false" abstract="false">
+		</subclass>
+		<subclass name="com.hrv.hbpm.core.TransitionTask" discriminator-value="com.hrv.hbpm.core.TransitionTask" dynamic-insert="false" dynamic-update="false" abstract="false">
+		</subclass>
+		<subclass name="com.hrv.hbpm.core.CustomTask" discriminator-value="com.hrv.hbpm.core.CustomTask" dynamic-insert="false" dynamic-update="false" abstract="false">
+			<property name="script" type="java.sql.Clob" lazy="true">
+				<column name="SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+			</property>
+		</subclass>
+	</class>
+</hibernate-mapping>

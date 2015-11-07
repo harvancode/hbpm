@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation=
+	"http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<bean id="serviceExecutor" class="com.hrv.springmvc.service.service.impl.ServiceExecutor" scope="prototype"/>
+	
+	<bean id="mainInterceptor" class="com.hrv.core.spring.interceptor.MainInterceptor"/>
+	<bean id="loggingServiceServiceImpl" class="com.hrv.core.spring.interceptor.PerformanceMonitor">
+		<property name="methodList">
+			<set>
+				<value>getAllService</value>
+				<value>executeService</value>
+				<value>executeThreadService</value>
+			</set>
+		</property>
+		<property name="mainInterceptor" ref="mainInterceptor"></property>
+	</bean>
+	<bean id="serviceDao" class="com.hrv.springmvc.service.service.impl.ServiceDaoImpl" parent="daoTemplate"></bean>
+	<bean id="serviceService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target">
+			<bean parent="txProxyTemplate">
+				<property name="target">
+					<bean class="com.hrv.springmvc.service.service.impl.ServiceServiceImpl">
+						<property name="serviceDao" ref="serviceDao" />
+						<property name="taskService" ref="taskService" />
+						<property name="sequenceFlowService" ref="sequenceFlowService" />
+						<property name="taskExecutor" ref="taskExecutor" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>loggingServiceServiceImpl</value>
+			</list>
+		</property>
+	</bean>
+	<aop:config>
+		<aop:pointcut id="serviceServiceexecuteThreadService" expression="execution(* com.hrv.springmvc.service.service.impl.ServiceServiceImpl.executeThreadService(..))" />
+		<aop:advisor pointcut-ref="serviceServiceexecuteThreadService" advice-ref="performanceMonitorMili" order="1" />
+	</aop:config>
+
+	<bean id="taskDao" class="com.hrv.springmvc.task.service.impl.TaskDaoImpl" parent="daoTemplate"></bean>
+	<bean id="taskService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com.hrv.springmvc.task.service.impl.TaskServiceImpl">
+				<property name="taskDao" ref="taskDao" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="sequenceFlowDao" class="com.hrv.springmvc.sequenceflow.service.impl.SequenceFlowDaoImpl" parent="daoTemplate"></bean>
+	<bean id="sequenceFlowService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com.hrv.springmvc.sequenceflow.service.impl.SequenceFlowServiceImpl">
+				<property name="sequenceFlowDao" ref="sequenceFlowDao" />
+			</bean>
+		</property>
+	</bean>
+</beans>

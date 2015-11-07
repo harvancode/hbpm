@@ -1,0 +1,118 @@
+package com.hrv.springmvc.service.viewcontroller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.hrv.core.mvc.WebController;
+import com.hrv.springmvc.service.model.ServiceVo;
+
+@SuppressWarnings("unchecked")
+@Controller
+public class ServiceController extends WebController {
+	private static final Logger logger = LogManager.getLogger(ServiceController.class);
+	private static final String BEAN_ID = "serviceService";
+	private static final String SERVICE_LIST = "/service/serviceList";
+
+	@Override
+	protected String getBeanId() {
+		return BEAN_ID;
+	}
+
+	@RequestMapping(value = "/serviceList")
+	public String serviceList(ServiceForm serviceForm) {
+		try {
+			List<ServiceVo> listVo = (List<ServiceVo>) callService(getBeanId(), "getAllService");
+			callService(getBeanId(), "testService");
+
+			logger.debug(listVo);
+		} catch (Exception e) {
+			logger.error("Exception : " + e.getMessage(), e);
+		}
+
+		return SERVICE_LIST;
+	}
+
+	@RequestMapping(value = "/executeService2")
+	public String executeService2(ServiceForm serviceForm, final HttpServletRequest request) {
+		try {
+			final String serviceCode = request.getParameter("serviceCode");
+
+			for (int i = 0; i < 1; i++) {
+				Thread t = new Thread(new Runnable() {
+					public void run() {
+						String result;
+						try {
+							result = (String) callService(getBeanId(), "executeThreadService", serviceCode);
+							// logger.debug(result);
+						} catch (Exception e) {
+							logger.error("Error on executeService : " + e.getMessage(), e);
+						}
+					}
+				});
+
+				t.start();
+			}
+
+			Thread.yield();
+		} catch (Exception e) {
+			logger.error("Error on executeService : " + e.getMessage(), e);
+		}
+
+		return SERVICE_LIST;
+	}
+
+	@RequestMapping(value = "/executeService")
+	public String executeService(ServiceForm serviceForm, final HttpServletRequest request) {
+		try {
+			final String serviceCode = request.getParameter("serviceCode");
+
+			try {
+				long start, end;
+
+				start = System.currentTimeMillis();
+
+//				for (int i = 0; i < 100; i++) {
+					String result = (String) callServiceCached(getBeanId(), "executeService", serviceCode);
+					// String result = (String) callService(getBeanId(),
+					// "executeService", serviceCode);
+//				}
+
+				end = System.currentTimeMillis();
+
+				logger.debug("executeService executed in : " + (end - start) + " ms.");
+				// logger.debug(result);
+			} catch (Exception e) {
+				logger.error("Error on executeService : " + e.getMessage(), e);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error on executeService : " + e.getMessage(), e);
+		}
+
+		return SERVICE_LIST;
+	}
+
+	@RequestMapping(value = "/executeThreadService")
+	public String executeThreadService(ServiceForm serviceForm, final HttpServletRequest request) {
+		try {
+			final String serviceCode = request.getParameter("serviceCode");
+
+			try {
+				String result = (String) callService(getBeanId(), "executeThreadService", serviceCode, 1000);
+			} catch (Exception e) {
+				logger.error("Error on executeThreadService : " + e.getMessage(), e);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error on executeThreadService : " + e.getMessage(), e);
+		}
+
+		return SERVICE_LIST;
+	}
+}

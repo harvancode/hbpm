@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 7, 2015 1:40:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.hrv.hbpm.core.SequenceFlow" table="SEQUENCE_FLOW">
+		<id name="id" type="java.lang.String">
+			<column name="ID" sql-type="NVARCHAR2(40)" />
+			<generator class="assigned" />
+		</id>
+		<version name="version" type="int">
+			<column name="version" sql-type="NUMBER(5,0)" />
+		</version>
+		<property name="description" type="java.lang.String">
+			<column name="DESCRIPTION" not-null="false" unique="false" sql-type="NVARCHAR2(255 CHAR)" />
+		</property>
+		<property name="onEnterScript" type="java.sql.Clob" lazy="true">
+			<column name="ON_ENTER_SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+		</property>
+		<property name="onLeaveScript" type="java.sql.Clob" lazy="true">
+			<column name="ON_LEAVE_SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+		</property>
+		<property name="script" type="java.sql.Clob" lazy="true">
+			<column name="SCRIPT" not-null="false" unique="false" sql-type="CLOB" />
+		</property>
+		<property name="sequenceNumber" type="java.lang.Integer">
+			<column name="SEQ_NUMBER" />
+		</property>
+		<many-to-one name="task" class="com.hrv.hbpm.core.BaseTask" fetch="select">
+			<column name="TASK_ID" />
+		</many-to-one>
+		<many-to-one name="parentTask" class="com.hrv.hbpm.core.BaseTask" fetch="select">
+			<column name="PARENT_TASK_ID" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>
