@@ -50,7 +50,8 @@
 				<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
 				<prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
 				<prop key="execute*">PROPAGATION_REQUIRED,-Exception</prop>
-				<prop key="*">PROPAGATION_REQUIRED, readOnly</prop>
+				<prop key="get*">PROPAGATION_SUPPORTS, readOnly</prop>
+<!-- 				<prop key="*">PROPAGATION_REQUIRED, readOnly</prop> -->
 			</props>
 		</property>
 	</bean>
