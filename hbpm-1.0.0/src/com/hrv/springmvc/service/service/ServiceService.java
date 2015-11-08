@@ -13,5 +13,7 @@ public interface ServiceService {
 
 	public String executeThreadService(String serviceCode, Integer size) throws HbpmException, Exception;
 
+	public String getExecuteService(String serviceCode) throws HbpmException, Exception;
+
 	public void testService(String param1, Integer param2, String param3, BigDecimal param4) throws HbpmException;
 }

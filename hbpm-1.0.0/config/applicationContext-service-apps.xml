@@ -19,6 +19,7 @@
 				<value>getAllService</value>
 				<value>executeService</value>
 				<value>executeThreadService</value>
+				<value>getExecuteService</value>
 			</set>
 		</property>
 		<property name="mainInterceptor" ref="mainInterceptor"></property>
@@ -45,7 +46,9 @@
 	</bean>
 	<aop:config>
 		<aop:pointcut id="serviceServiceexecuteThreadService" expression="execution(* com.hrv.springmvc.service.service.impl.ServiceServiceImpl.executeThreadService(..))" />
+		<aop:pointcut id="serviceServicegetExecuteService" expression="execution(* com.hrv.springmvc.service.service.impl.ServiceServiceImpl.getExecuteService(..))" />
 		<aop:advisor pointcut-ref="serviceServiceexecuteThreadService" advice-ref="performanceMonitorMili" order="1" />
+		<aop:advisor pointcut-ref="serviceServicegetExecuteService" advice-ref="performanceMonitorMili" order="2" />
 	</aop:config>
 
 	<bean id="taskDao" class="com.hrv.springmvc.task.service.impl.TaskDaoImpl" parent="daoTemplate"></bean>

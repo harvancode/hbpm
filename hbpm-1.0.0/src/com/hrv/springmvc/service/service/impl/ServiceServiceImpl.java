@@ -291,7 +291,12 @@ public class ServiceServiceImpl extends DefaultService implements ServiceService
 		serviceMap = new Hashtable<String, Service>();
 	}
 
+	public String getExecuteService(String serviceCode) throws HbpmException, Exception {
+		return executeService(serviceCode);
+	}
+
 	@Override
 	public void testService(String param1, Integer param2, String param3, BigDecimal param4) throws HbpmException {
+		logger.debug(param1 + ", " + param2 + ", " + param3 + ", " + param4);
 	}
 }

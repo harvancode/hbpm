@@ -78,11 +78,15 @@ public class ServiceController extends WebController {
 
 				start = System.currentTimeMillis();
 
-				for (int i = 0; i < 200; i++) {
-					// String result = (String) callServiceCached(getBeanId(),
-					// "executeService", serviceCode);
-					String result = (String) callService(getBeanId(), "executeService", serviceCode);
-				}
+				// for (int i = 0; i < 2000; i++) {
+				// String result = (String) callServiceCached(getBeanId(),
+				// "executeService", serviceCode);
+				// String result = (String) callService(getBeanId(),
+				// "executeService", serviceCode);
+				String result = (String) callService(getBeanId(), "getExecuteService", serviceCode);
+				// String result = (String) callServiceCached(getBeanId(),
+				// "getExecuteService", serviceCode);
+				// }
 
 				end = System.currentTimeMillis();
 

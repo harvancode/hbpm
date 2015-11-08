@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class PerformanceMonitor implements MethodInterceptor {
-	Logger logger = LogManager.getLogger(PerformanceMonitor.class);
+	private ThreadLocal<Logger> loggerLocal = new ThreadLocal<Logger>();
 	private static final double MICRO = 1000;
 	private static final double MILI = 1000 * 1000;
 	private static final double SECOND = 1000 * 1000 * 1000;
@@ -20,26 +20,29 @@ public class PerformanceMonitor implements MethodInterceptor {
 	private static final String MICRO_DISPLAY = " µs.";
 	private static final String MILI_DISPLAY = " ms.";
 	private static final String SECOND_DISPLAY = " s.";
-	private static final String EXECUTED_IND = " executed in ";
+	private static final String EXECUTED_IND = " executed in : ";
 	private String precision;
 
-	public Object invoke(MethodInvocation method) throws Throwable {
+	public Object invoke(MethodInvocation methodInv) throws Throwable {
 		long start = System.nanoTime();
+		Method method = methodInv.getMethod();
+
+		loggerLocal.set(LogManager.getLogger(method.getDeclaringClass()));
 
 		try {
-			return method.proceed();
+			return methodInv.proceed();
 		} finally {
 			long end = System.nanoTime();
 
 			if (precision != null) {
 				if (NANO_S.equals(precision)) {
-					printStatsInNano(method.getMethod(), end - start);
+					printStatsInNano(methodInv.getMethod(), end - start);
 				} else if (MICRO_S.equals(precision)) {
-					printStatsInMicro(method.getMethod(), end - start);
+					printStatsInMicro(methodInv.getMethod(), end - start);
 				} else if (MILI_S.equals(precision)) {
-					printStatsInMili(method.getMethod(), end - start);
+					printStatsInMili(methodInv.getMethod(), end - start);
 				} else if (SECOND_S.equals(precision)) {
-					printStatsInSecond(method.getMethod(), end - start);
+					printStatsInSecond(methodInv.getMethod(), end - start);
 				}
 			}
 		}
@@ -50,11 +53,11 @@ public class PerformanceMonitor implements MethodInterceptor {
 	}
 
 	private StringBuilder getPrefixInfo(Method method) {
-		return new StringBuilder(method.getDeclaringClass().getName()).append(".").append(method.getName()).append("() ");
+		return new StringBuilder(method.getName());
 	}
 
 	private void printStatsInNano(Method method, long elapsedTime) {
-		logger.debug(getPrefixInfo(method).append(getTimeInNanoInfo(elapsedTime)));
+		loggerLocal.get().debug(getPrefixInfo(method).append(getTimeInNanoInfo(elapsedTime)));
 	}
 
 	private String getTimeInNanoInfo(long elapsedTime) {
@@ -62,7 +65,7 @@ public class PerformanceMonitor implements MethodInterceptor {
 	}
 
 	private void printStatsInMicro(Method method, long elapsedTime) {
-		logger.debug(getPrefixInfo(method).append(getTimeInMicroInfo(elapsedTime / MICRO)));
+		loggerLocal.get().debug(getPrefixInfo(method).append(getTimeInMicroInfo(elapsedTime / MICRO)));
 	}
 
 	private String getTimeInMicroInfo(double elapsedTime) {
@@ -70,7 +73,7 @@ public class PerformanceMonitor implements MethodInterceptor {
 	}
 
 	private void printStatsInMili(Method method, long elapsedTime) {
-		logger.debug(getPrefixInfo(method).append(getTimeInMiliInfo(elapsedTime / MILI)));
+		loggerLocal.get().debug(getPrefixInfo(method).append(getTimeInMiliInfo(elapsedTime / MILI)));
 	}
 
 	private String getTimeInMiliInfo(double elapsedTime) {
@@ -78,7 +81,7 @@ public class PerformanceMonitor implements MethodInterceptor {
 	}
 
 	private void printStatsInSecond(Method method, long elapsedTime) {
-		logger.debug(getPrefixInfo(method).append(getTimeInSecondInfo(elapsedTime / SECOND)));
+		loggerLocal.get().debug(getPrefixInfo(method).append(getTimeInSecondInfo(elapsedTime / SECOND)));
 	}
 
 	private String getTimeInSecondInfo(double elapsedTime) {
