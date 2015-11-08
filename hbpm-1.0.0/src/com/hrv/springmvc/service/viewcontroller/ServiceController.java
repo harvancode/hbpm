@@ -109,7 +109,7 @@ public class ServiceController extends WebController {
 			final String serviceCode = request.getParameter("serviceCode");
 
 			try {
-				String result = (String) callService(getBeanId(), "executeThreadService", serviceCode, 1000);
+				String result = (String) callService(getBeanId(), "executeThreadService", serviceCode, 1);
 			} catch (Exception e) {
 				logger.error("Error on executeThreadService : " + e.getMessage(), e);
 			}

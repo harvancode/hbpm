@@ -164,11 +164,14 @@ public class ServiceServiceImpl extends DefaultService implements ServiceService
 		StringBuffer buff = new StringBuffer();
 		ServiceExecutor[] se = new ServiceExecutor[size];
 		String[] resultMessage = new String[size];
+		ServiceService serviceServiceByProxy = (ServiceService) getService("serviceService");
+		ServiceService serviceServiceNoProxy = this;
 
 		for (int i = 0; i < se.length; i++) {
 			se[i] = (ServiceExecutor) getService("serviceExecutor");
 			se[i].setServiceCode(serviceCode);
-			se[i].setServiceService(ServiceServiceImpl.this);
+			se[i].setServiceService(serviceServiceNoProxy);
+			// se[i].setServiceService(serviceServiceByProxy);
 		}
 
 		for (int i = 0; i < se.length; i++) {
