@@ -14,7 +14,9 @@ public class MainInterceptor implements MethodInterceptor {
 	private static final Logger logger = LogManager.getLogger(MainInterceptor.class);
 
 	public Object invoke(MethodInvocation paramMethodInvocation) throws Throwable {
-		logger.debug("MainInterceptor invoked.");
+		if (logger.isTraceEnabled()) {
+			logger.trace("MainInterceptor invoked.");
+		}
 
 		return paramMethodInvocation.proceed();
 	}

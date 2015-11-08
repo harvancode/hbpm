@@ -1,5 +1,6 @@
 package com.hrv.springmvc.service.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -74,6 +75,8 @@ public class ServiceServiceImpl extends DefaultService implements ServiceService
 
 					service.init();
 					serviceMap.put(service.getCode(), service);
+
+					logger.debug("Service : \"" + service.getCode() + "\" has been loaded.");
 				} catch (HbpmException e) {
 					System.err.println("HbpmException getAllService : " + e);
 					e.printStackTrace();
@@ -289,7 +292,6 @@ public class ServiceServiceImpl extends DefaultService implements ServiceService
 	}
 
 	@Override
-	public void testService() throws HbpmException {
-		logger.debug("testService");
+	public void testService(String param1, Integer param2, String param3, BigDecimal param4) throws HbpmException {
 	}
 }

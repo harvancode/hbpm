@@ -1,5 +1,6 @@
 package com.hrv.springmvc.service.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.hrv.hbpm.exception.HbpmException;
@@ -12,5 +13,5 @@ public interface ServiceService {
 
 	public String executeThreadService(String serviceCode, Integer size) throws HbpmException, Exception;
 
-	public void testService() throws HbpmException;
+	public void testService(String param1, Integer param2, String param3, BigDecimal param4) throws HbpmException;
 }

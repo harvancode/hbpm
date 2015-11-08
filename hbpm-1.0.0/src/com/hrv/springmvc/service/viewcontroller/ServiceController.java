@@ -1,5 +1,6 @@
 package com.hrv.springmvc.service.viewcontroller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hrv.core.mvc.WebController;
+import com.hrv.core.spring.interceptor.PerformanceMonitor;
 import com.hrv.springmvc.service.model.ServiceVo;
 
 @SuppressWarnings("unchecked")
@@ -28,7 +30,6 @@ public class ServiceController extends WebController {
 	public String serviceList(ServiceForm serviceForm) {
 		try {
 			List<ServiceVo> listVo = (List<ServiceVo>) callService(getBeanId(), "getAllService");
-			callService(getBeanId(), "testService");
 
 			logger.debug(listVo);
 		} catch (Exception e) {
@@ -77,11 +78,11 @@ public class ServiceController extends WebController {
 
 				start = System.currentTimeMillis();
 
-//				for (int i = 0; i < 100; i++) {
-					String result = (String) callServiceCached(getBeanId(), "executeService", serviceCode);
-					// String result = (String) callService(getBeanId(),
+				for (int i = 0; i < 200; i++) {
+					// String result = (String) callServiceCached(getBeanId(),
 					// "executeService", serviceCode);
-//				}
+					String result = (String) callService(getBeanId(), "executeService", serviceCode);
+				}
 
 				end = System.currentTimeMillis();
 
@@ -111,6 +112,26 @@ public class ServiceController extends WebController {
 
 		} catch (Exception e) {
 			logger.error("Error on executeThreadService : " + e.getMessage(), e);
+		}
+
+		return SERVICE_LIST;
+	}
+
+	@RequestMapping(value = "/testService")
+	public String testService(ServiceForm serviceForm, final HttpServletRequest request) {
+		try {
+			long start = System.currentTimeMillis();
+
+			for (int i = 0; i < 200; i++) {
+				// callServiceCached(getBeanId(), "testService", "param1",
+				// Integer.valueOf(1), "param3", BigDecimal.valueOf(2));
+				callService(getBeanId(), "testService", "param1", Integer.valueOf(1), "param3", BigDecimal.valueOf(2));
+			}
+
+			logger.debug(PerformanceMonitor.getInstance().getMethodExecutionTimeInfo(start, System.currentTimeMillis(), Thread.currentThread().getStackTrace()));
+			// logger.debug(result);
+		} catch (Exception e) {
+			logger.error(PerformanceMonitor.getInstance().getMethodName(Thread.currentThread().getStackTrace()) + " error : " + e.getMessage(), e);
 		}
 
 		return SERVICE_LIST;

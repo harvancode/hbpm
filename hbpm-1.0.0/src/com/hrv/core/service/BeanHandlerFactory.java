@@ -16,8 +16,6 @@ public class BeanHandlerFactory {
 	}
 
 	static {
-		if (applicationContext == null) {
-			applicationContext = ApplicationContextLoader.getInstance().load();
-		}
+		applicationContext = ApplicationContextLoader.getInstance().load();
 	}
 }

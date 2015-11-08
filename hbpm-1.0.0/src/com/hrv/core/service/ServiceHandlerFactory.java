@@ -9,17 +9,13 @@ import com.hrv.core.hibernate.GenericDao;
 import com.hrv.hbpm.exception.HbpmException;
 
 public class ServiceHandlerFactory extends BeanHandlerFactory implements ServiceHandler {
-	private static ServiceHandlerFactory serviceHandlerFactory;
+	private static final ServiceHandlerFactory serviceHandlerFactory = new ServiceHandlerFactory();
 	private static Map<String, Method> serviceMethodMap = new HashMap<String, Method>();
 
 	private ServiceHandlerFactory() {
 	}
 
 	public static ServiceHandler getInstance() {
-		if (serviceHandlerFactory == null) {
-			serviceHandlerFactory = new ServiceHandlerFactory();
-		}
-
 		return serviceHandlerFactory;
 	}
 
@@ -87,7 +83,7 @@ public class ServiceHandlerFactory extends BeanHandlerFactory implements Service
 
 				for (int i = 0; i < parameters.length; i++) {
 					params[i] = parameters[i].getClass();
-					buff.append(parameters[i].getClass().getSimpleName());
+					buff.append(params[i].getName());
 				}
 
 				if ((method = serviceMethodMap.get(serviceName + methodName + buff.toString())) == null) {
@@ -109,5 +105,4 @@ public class ServiceHandlerFactory extends BeanHandlerFactory implements Service
 			throw ex;
 		}
 	}
-
 }
