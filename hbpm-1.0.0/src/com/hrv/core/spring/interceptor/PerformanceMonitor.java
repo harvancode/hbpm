@@ -9,12 +9,15 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.hrv.core.utils.BeanPropertyUtils;
+
 /**
  * <pre>
  * Programmatic & Proxy based - Performance Monitoring.
  * </pre>
  * 
- * @author Harvan
+ * @author Harvan Irsyadi
+ * @version 1.1, 11/18/15
  * 
  */
 public class PerformanceMonitor implements MethodInterceptor {
@@ -22,8 +25,6 @@ public class PerformanceMonitor implements MethodInterceptor {
 	private static final double MILIS = 1000 * 1000;
 	private static final String MILIS_UNIT = " ms.";
 	private static final String INFO_EXECUTED_IN = " executed in : ";
-	private static final String GET_STACK_TRACE = "getStackTrace";
-	private static final String UNKNOWN_METHOD = "<unknown method>";
 	private Logger logger;
 	private Set<String> methodList = new HashSet<String>();
 	private MethodInterceptor mainInterceptor;
@@ -39,25 +40,15 @@ public class PerformanceMonitor implements MethodInterceptor {
 		return instance;
 	}
 
-	public String getMethodName(StackTraceElement e[]) {
-		String temp = null;
-
-		for (StackTraceElement s : e) {
-			temp = s.getMethodName();
-
-			if (!temp.equals(GET_STACK_TRACE)) {
-				return temp;
-			}
-		}
-
-		return UNKNOWN_METHOD;
+	private String getMethodName(StackTraceElement e[]) {
+		return BeanPropertyUtils.getMethodName(e);
 	}
 
 	public String getMethodExecutionTimeInfo(long start, long end, StackTraceElement e[]) {
 		return new StringBuffer(getMethodName(e)).append(INFO_EXECUTED_IN).append((end - start)).append(MILIS_UNIT).toString();
 	}
 
-	public String getMethodExecutionTimeInfo(long start, long end, Method method) {
+	private String getMethodExecutionTimeInfo(long start, long end, Method method) {
 		return new StringBuffer(method.getName()).append(INFO_EXECUTED_IN).append((end - start) / MILIS).append(MILIS_UNIT).toString();
 	}
 

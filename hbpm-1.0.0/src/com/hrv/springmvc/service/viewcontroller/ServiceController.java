@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hrv.core.mvc.WebController;
 import com.hrv.core.spring.interceptor.PerformanceMonitor;
+import com.hrv.core.utils.BeanPropertyUtils;
 import com.hrv.springmvc.service.model.ServiceVo;
 
 @SuppressWarnings("unchecked")
@@ -81,9 +82,9 @@ public class ServiceController extends WebController {
 				// for (int i = 0; i < 2000; i++) {
 				// String result = (String) callServiceCached(getBeanId(),
 				// "executeService", serviceCode);
+				String result = (String) callService(getBeanId(), "executeService", serviceCode);
 				// String result = (String) callService(getBeanId(),
-				// "executeService", serviceCode);
-				String result = (String) callService(getBeanId(), "getExecuteService", serviceCode);
+				// "getExecuteService", serviceCode);
 				// String result = (String) callServiceCached(getBeanId(),
 				// "getExecuteService", serviceCode);
 				// }
@@ -109,7 +110,7 @@ public class ServiceController extends WebController {
 			final String serviceCode = request.getParameter("serviceCode");
 
 			try {
-				String result = (String) callService(getBeanId(), "executeThreadService", serviceCode, 1);
+				String result = (String) callService(getBeanId(), "executeThreadService", serviceCode, 1000);
 			} catch (Exception e) {
 				logger.error("Error on executeThreadService : " + e.getMessage(), e);
 			}
@@ -135,7 +136,7 @@ public class ServiceController extends WebController {
 			logger.debug(PerformanceMonitor.getInstance().getMethodExecutionTimeInfo(start, System.currentTimeMillis(), Thread.currentThread().getStackTrace()));
 			// logger.debug(result);
 		} catch (Exception e) {
-			logger.error(PerformanceMonitor.getInstance().getMethodName(Thread.currentThread().getStackTrace()) + " error : " + e.getMessage(), e);
+			logger.error(BeanPropertyUtils.getMethodName(Thread.currentThread().getStackTrace()) + " error : " + e.getMessage(), e);
 		}
 
 		return SERVICE_LIST;
